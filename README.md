@@ -37,3 +37,18 @@ cmake -DWITH_JAEGER=ON -DCMAKE_INSTALL_PREFIX=/tmp/install/ ..
 make -j8
 make install
 ```
+
+## Tests
+
+### Test with UBSAN
+```
+cmake -DCMAKE_CXX_FLAGS='-fsanitize=undefined -fno-omit-frame-pointer -fno-sanitize-recover=all' ..
+make -j8
+make test
+
+# GDB breakpoint to break on UBSAN finding:
+b __ubsan::ScopedReport::~ScopedReport
+
+# Get backtrace:
+UBSAN_OPTIONS=print_stacktrace=1 ./api/test/nostd/shared_ptr_test
+```
